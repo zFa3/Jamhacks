@@ -6,15 +6,12 @@ env = os.environ
 
 API_KEY = env.get("API_KEY")
 image_path = "driving_image.png"
+# Create the request payload
+url = f"https://vision.googleapis.com/v1/images:annotate?key={API_KEY}"
 
 # Load and encode the image
 with open(f"./test_images/{image_path}", "rb") as image_file:
     encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
-
-# print(encoded_image)
-
-# Create the request payload
-url = f"https://vision.googleapis.com/v1/images:annotate?key={API_KEY}"
 
 payload = {
     "requests": [

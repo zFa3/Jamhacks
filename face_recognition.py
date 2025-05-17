@@ -48,6 +48,66 @@ class FaceRecognition:
         ''' set the open cv frame '''
         self.cvframe = cvframe
     
+    def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> None:
+
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # process the face
+
+        results = self.face_mesh.process(frame)
+
+        # if the face exists
+
+        if results.multi_face_landmarks:
+
+            # draw each landmark on the overlay
+            for face_landmarks in results.multi_face_landmarks:
+
+                # find the dimensions of the eyes to determine
+                # if the driver has their eyes open or closed
+                x, y, _ = self.returnlandmark_xyz(face_landmarks, 145)
+                x2, y2, _ = self.returnlandmark_xyz(face_landmarks, 159)
+                ldistance = self.calculate_distance(x, y, x2, y2)
+                # print(f"Right Eye Distance: {ldistance:.4f}", end = "\t")
+
+                x, y, _ = self.returnlandmark_xyz(face_landmarks, 386)
+                x2, y2, _ = self.returnlandmark_xyz(face_landmarks, 374)
+                rdistance = self.calculate_distance(x, y, x2, y2)
+                # print(f"Left Eye Distance: {rdistance:.4f}")
+
+                x, y, _ = self.returnlandmark_xyz(face_landmarks, 33)
+                x2, y2, _ = self.returnlandmark_xyz(face_landmarks, 133)
+                left_eye_width = self.calculate_distance(x, y, x2, y2)
+
+                x, y, _ = self.returnlandmark_xyz(face_landmarks, 33)
+                x2, y2, _ = self.returnlandmark_xyz(face_landmarks, 133)
+                right_eye_width = self.calculate_distance(x, y, x2, y2)
+
+                print(f"Left Eye Normalized: {(ldistance/left_eye_width) * 100:.2f}", end = "\t")
+                print(f"Right Eye Normalized: {(rdistance/right_eye_width) * 100:.2f}", end = "\t")
+
+                # check if the driver is facing forwards bys
+                # find the direction of the driver's sight
+
+                # left landmark - left eye
+                left_lx, left_ly, _ = self.returnlandmark_xyz(face_landmarks, 33)
+                # right landmark - left eye
+                left_rx, left_ry, _ = self.returnlandmark_xyz(face_landmarks, 133)
+
+                # iris landmarks
+                left_clx, left_cly, _ = self.returnlandmark_xyz(face_landmarks, 471)
+                left_crx, left_cry, _ = self.returnlandmark_xyz(face_landmarks, 469)
+
+                # do the same for the right eye
+                right_lx, right_ly, _ = self.returnlandmark_xyz(face_landmarks, 463)
+                right_rx, right_ry, _ = self.returnlandmark_xyz(face_landmarks, 263)
+                right_clx, right_cly, _ = self.returnlandmark_xyz(face_landmarks, 476)
+                right_crx, right_cry, _ = self.returnlandmark_xyz(face_landmarks, 474)
+
+                # print eye pan
+                print(f"Left pan: {self.calculate_distance(left_clx, left_cly, left_lx, left_ly) - self.calculate_distance(left_crx, left_cry, left_rx, left_ry):.4f}", end = "\t")
+                print(f"Right pan: {self.calculate_distance(right_clx, right_cly, right_lx, right_ly) - self.calculate_distance(right_crx, right_cry, right_rx, right_ry):.4f}")
+
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -88,7 +148,6 @@ class FaceRecognition:
                     connection_drawing_spec=self.mp_drawing_styles
                     .get_default_face_mesh_iris_connections_style()
                 )
-
 
         # return the rgb frame with an overlay
         return frame
