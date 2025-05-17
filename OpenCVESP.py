@@ -57,4 +57,3 @@ graph(face_tracker.right_pan)
 
 capture.release()
 cv2.destroyAllWindows()
-print("HELLO")
