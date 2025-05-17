@@ -36,6 +36,8 @@ class FaceRecognition:
         self.left_eye = []
         self.right_eye = []
 
+        self.tilt = False
+
     def calculate_distance(self: FaceRecognition, x1: int, y1: int, x2: int, y2: int) -> float:
         ''' calculate euclidean distance between two points '''
         return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
@@ -111,6 +113,8 @@ class FaceRecognition:
                 # print eye pan
                 self.left_pan.append(self.calculate_distance(left_clx, left_cly, left_lx, left_ly) - self.calculate_distance(left_crx, left_cry, left_rx, left_ry))
                 self.right_pan.append(self.calculate_distance(right_clx, right_cly, right_lx, right_ly) - self.calculate_distance(right_crx, right_cry, right_rx, right_ry))
+
+                self.tilt = abs(left_clx - left_crx) < abs(left_cly - left_cry) * (3 ** 0.5)
 
         else:
 

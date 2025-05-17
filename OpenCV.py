@@ -29,6 +29,7 @@ while capture.isOpened():
         cv2.imwrite("./test_images/api_frame.png", frame)
         print("HELLO")
         time1 = perf_counter()
+    print(face_tracker.tilt)
 
     face_tracker.set_cvframe(rgb_frame)
     final_frame = face_tracker.add_overlay(rgb_frame)
