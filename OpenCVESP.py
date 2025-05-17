@@ -2,7 +2,7 @@
 import cv2
 from Graphy import graph
 import FaceDetected
-import api_call
+from api_call import APICall
 import requests
 import json
 from face_recognition import FaceRecognition
@@ -30,12 +30,13 @@ esp_cam_stream_url = f"http://{esp_cam_ip}:{esp_cam_port}/stream"
 capture = cv2.VideoCapture(esp_cam_stream_url)
 
 face_tracker = FaceRecognition()
+api_caller = APICall()
 
 delay_time = 5 # seconds 
 time1 = None
 cnt = 0
 
-ping_api = False # TODO CHANGE
+ping_api = True
 
 # for loop
 while capture.isOpened():
@@ -54,11 +55,10 @@ while capture.isOpened():
             cnt += 1
         cv2.imwrite("./test_images/api_frame.png", frame)
         if ping_api:
-            print(api_call.APICall.make_call("api_frame.png"))
+            print(api_caller.make_call("api_frame.png"))
         time1 = perf_counter()
     if cnt == 2:
         break
-    print(face_tracker.tilt)
 
     face_tracker.set_cvframe(rgb_frame)
     final_frame = face_tracker.add_overlay(rgb_frame)
@@ -72,6 +72,8 @@ while capture.isOpened():
 # print(face_tracker.prune_data(face_tracker.left_pan))
 to_dump_data = {}
 to_dump_data["left_pan"] = face_tracker.prune_data(face_tracker.left_pan)
+to_dump_data["phone_detected"] = api_caller.phone_detected
+print(to_dump_data["phone_detected"])
 with open("web_data_viewer/sent_data.json", "w") as file:
     json.dump(to_dump_data, file)
 

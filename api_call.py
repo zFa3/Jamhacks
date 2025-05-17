@@ -12,8 +12,10 @@ url = f"https://vision.googleapis.com/v1/images:annotate?key={API_KEY}"
 
 class APICall:
     
-    @staticmethod
-    def make_call(image_filename):
+    def __init__(self) -> None:
+        self.phone_detected = 0
+
+    def make_call(self, image_filename) -> None:
         # Load and encode the image
         with open(f"./test_images/{image_filename}", "rb") as image_file:
             encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
@@ -39,13 +41,22 @@ class APICall:
         if response.status_code == 200:
             # print(response.json())
             # print("\n\n\n")
+            deteched = False
             jsonified = response.json()
-            print("\n\nLABELS:")
-            for label in jsonified['responses'][0].get('labelAnnotations', []):
-                print(f"- {label['description']} ({label['score']:.2f})")
 
-            print("\nOBJECTS:")
-            for obj in jsonified['responses'][0].get('localizedObjectAnnotations', []):
-                print(f"- {obj['name']} ({obj['score']:.2f})")
+            for label in jsonified['responses'][0].get('labelAnnotations', []):
+                if "phone" in label['description'] or "device" in label['description']:
+                    deteched = True
+                    self.phone_detected += 1
+                    break
+                # print(f"- {label['description']} ({label['score']:.2f})")
+
+            if not deteched:
+                for obj in jsonified['responses'][0].get('localizedObjectAnnotations', []):
+                    if "phone" in obj['name'] or "device" in obj['name']:
+                        deteched = True
+                        self.phone_detected += 1
+                        break
+                    # print(f"- {obj['name']} ({obj['score']:.2f})")
         else:
             print("Error:", response.status_code, response.text)
