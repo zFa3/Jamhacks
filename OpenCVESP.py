@@ -1,15 +1,20 @@
+# install all the dependancies
 import cv2
 from Graphy import graph
 import FaceDetected
+import api_call
 import requests
 from face_recognition import FaceRecognition
 from time import perf_counter
 
+# the url for the esp cam
 url = "http://10.37.123.227/control"
 params = {
     'var': 'framesize',
-    'val': '11'  # SVGA corresponds to 10
+    'val': '11'
+    # SVGA corresponds to 10 ( increases the resolutions )
 }
+
 response = requests.get(url, params=params)
 
 # Replace with the ESP32-CAM's IP address and port
@@ -22,7 +27,7 @@ capture = cv2.VideoCapture(esp_cam_stream_url)
 
 face_tracker = FaceRecognition()
 
-delay_time = 2 # seconds
+delay_time = 5 # seconds 
 time1 = None
 cnt = 0
 
@@ -42,7 +47,7 @@ while capture.isOpened():
         if not FaceDetected.is_face_in_frame(frame):
             cnt += 1
         cv2.imwrite("./test_images/api_frame.png", frame)
-        print("HELLO")
+        print(api_call.APICall.make_call("api_frame.png"))
         time1 = perf_counter()
     if cnt == 2:
         break
@@ -53,7 +58,8 @@ while capture.isOpened():
     face_tracker.save_information(rgb_frame)
 
     cv2.imshow('DriverAssist', final_frame)
-    cv2.waitKey(1)
+    if cv2.waitKey(1) == ord('q'):
+        break
 
 graph(face_tracker.right_pan)
 
