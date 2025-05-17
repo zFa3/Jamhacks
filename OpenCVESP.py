@@ -1,10 +1,25 @@
 import cv2
 from Graphy import graph
 import BodyDetection
+import requests
 from face_recognition import FaceRecognition
 from time import perf_counter
 
-capture = cv2.VideoCapture(0)
+url = "http://10.37.123.227/control"
+params = {
+    'var': 'framesize',
+    'val': '11'  # SVGA corresponds to 10
+}
+response = requests.get(url, params=params)
+
+# Replace with the ESP32-CAM's IP address and port
+esp_cam_ip = "10.37.123.227"
+esp_cam_port = "81"
+esp_cam_stream_url = f"http://{esp_cam_ip}:{esp_cam_port}/stream"
+
+# Capture the stream from the ESP32-CAM
+capture = cv2.VideoCapture(esp_cam_stream_url)
+
 
 delay_time = 2 # seconds
 

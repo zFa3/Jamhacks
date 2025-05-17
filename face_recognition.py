@@ -122,7 +122,9 @@ class FaceRecognition:
             self.right_pan.append(None)
 
             self.left_eye.append(None)
-            self.right_eye.append(None)            
+            self.right_eye.append(None)       
+
+            self.tilt = False     
 
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
