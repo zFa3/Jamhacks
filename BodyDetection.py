@@ -14,7 +14,4 @@ def is_person_in_frame(rgb_frame: cv2.Mat) -> bool:
     results = pose.process(rgb_frame)
 
     # Draw landmarks on the frame if any are found
-    if results.pose_landmarks:
-        return True
-        mp_drawing.draw_landmarks(rgb_frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-    return False
+    return results.pose_landmarks
