@@ -30,7 +30,13 @@ class FaceRecognition:
             min_tracking_confidence=0.7
         )
 
-    def calculate_distance(x1: int, y1: int, x2: int, y2: int) -> float:
+        self.left_pan = []
+        self.right_pan = []
+
+        self.left_eye = []
+        self.right_eye = []
+
+    def calculate_distance(self: FaceRecognition, x1: int, y1: int, x2: int, y2: int) -> float:
         ''' calculate euclidean distance between two points '''
         return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
     
@@ -48,16 +54,14 @@ class FaceRecognition:
         ''' set the open cv frame '''
         self.cvframe = cvframe
     
-    def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> None:
+    def save_information(self: FaceRecognition, frame : cv2.Mat) -> None:
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # process the face
-
         results = self.face_mesh.process(frame)
 
         # if the face exists
-
         if results.multi_face_landmarks:
 
             # draw each landmark on the overlay
@@ -83,10 +87,10 @@ class FaceRecognition:
                 x2, y2, _ = self.returnlandmark_xyz(face_landmarks, 133)
                 right_eye_width = self.calculate_distance(x, y, x2, y2)
 
-                print(f"Left Eye Normalized: {(ldistance/left_eye_width) * 100:.2f}", end = "\t")
-                print(f"Right Eye Normalized: {(rdistance/right_eye_width) * 100:.2f}", end = "\t")
+                self.left_eye.append((ldistance/left_eye_width) * 100)
+                self.right_eye.append((rdistance/right_eye_width) * 100)
 
-                # check if the driver is facing forwards bys
+                # check if the driver is facing forwards by
                 # find the direction of the driver's sight
 
                 # left landmark - left eye
@@ -105,8 +109,16 @@ class FaceRecognition:
                 right_crx, right_cry, _ = self.returnlandmark_xyz(face_landmarks, 474)
 
                 # print eye pan
-                print(f"Left pan: {self.calculate_distance(left_clx, left_cly, left_lx, left_ly) - self.calculate_distance(left_crx, left_cry, left_rx, left_ry):.4f}", end = "\t")
-                print(f"Right pan: {self.calculate_distance(right_clx, right_cly, right_lx, right_ly) - self.calculate_distance(right_crx, right_cry, right_rx, right_ry):.4f}")
+                self.left_pan.append(self.calculate_distance(left_clx, left_cly, left_lx, left_ly) - self.calculate_distance(left_crx, left_cry, left_rx, left_ry))
+                self.right_pan.append(self.calculate_distance(right_clx, right_cly, right_lx, right_ly) - self.calculate_distance(right_crx, right_cry, right_rx, right_ry))
+
+        else:
+
+            self.left_pan.append(None)
+            self.right_pan.append(None)
+
+            self.left_eye.append(None)
+            self.right_eye.append(None)            
 
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
