@@ -5,14 +5,16 @@ import base64
 env = os.environ
 
 API_KEY = env.get("API_KEY")
-# image_path = "driving_image.png"
+# image_filename = "driving_image.png"
 # Create the request payload
 url = f"https://vision.googleapis.com/v1/images:annotate?key={API_KEY}"
 
 class APICall:
-    def make_call(image_path):
+    
+    @staticmethod
+    def make_call(image_filename):
         # Load and encode the image
-        with open(f"./test_images/{image_path}", "rb") as image_file:
+        with open(f"./test_images/{image_filename}", "rb") as image_file:
             encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
 
         payload = {

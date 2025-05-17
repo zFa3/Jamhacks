@@ -1,6 +1,5 @@
 import cv2
 from Graphy import graph
-import BodyDetection
 import api_call
 from face_recognition import FaceRecognition
 from time import perf_counter
@@ -28,9 +27,10 @@ while capture.isOpened():
         # if not BodyDetection.is_person_in_frame(frame):
             # break
         cv2.imwrite("./test_images/api_frame.png", frame)
-        print()
+        print(api_call.APICall.make_call("api_frame.png"))
         time1 = perf_counter()
-    print(face_tracker.tilt)
+
+    # print(face_tracker.tilt)
 
     # face_tracker.set_cvframe(rgb_frame)
     # final_frame = face_tracker.add_overlay(rgb_frame)

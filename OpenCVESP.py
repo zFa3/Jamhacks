@@ -1,6 +1,6 @@
 import cv2
 from Graphy import graph
-import BodyDetection
+import FaceDetected
 import requests
 from face_recognition import FaceRecognition
 from time import perf_counter
@@ -20,11 +20,11 @@ esp_cam_stream_url = f"http://{esp_cam_ip}:{esp_cam_port}/stream"
 # Capture the stream from the ESP32-CAM
 capture = cv2.VideoCapture(esp_cam_stream_url)
 
+face_tracker = FaceRecognition()
 
 delay_time = 2 # seconds
-
-face_tracker = FaceRecognition()
 time1 = None
+cnt = 0
 
 # for loop
 while capture.isOpened():
@@ -39,11 +39,13 @@ while capture.isOpened():
     if time1 is None:
         time1 = perf_counter()
     elif perf_counter() - time1 >= delay_time:
-        # if not BodyDetection.is_person_in_frame(frame):
-            # break
+        if not FaceDetected.is_face_in_frame(frame):
+            cnt += 1
         cv2.imwrite("./test_images/api_frame.png", frame)
         print("HELLO")
         time1 = perf_counter()
+    if cnt == 2:
+        break
     print(face_tracker.tilt)
 
     face_tracker.set_cvframe(rgb_frame)
