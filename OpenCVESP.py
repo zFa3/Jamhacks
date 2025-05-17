@@ -4,8 +4,12 @@ from Graphy import graph
 import FaceDetected
 import api_call
 import requests
+import json
 from face_recognition import FaceRecognition
 from time import perf_counter
+
+with open("web_data_viewer/sent_data.json", "w") as file:
+    file.write(r"{}")
 
 # the url for the esp cam
 url = "http://10.37.123.227/control"
@@ -64,7 +68,12 @@ while capture.isOpened():
     if cv2.waitKey(1) == ord('q'):
         break
 
-graph(face_tracker.tilt_hist)
+# graph(face_tracker.left_pan)
+# print(face_tracker.prune_data(face_tracker.left_pan))
+to_dump_data = {}
+to_dump_data["left_pan"] = face_tracker.prune_data(face_tracker.left_pan)
+with open("web_data_viewer/sent_data.json", "w") as file:
+    json.dump(to_dump_data, file)
 
 capture.release()
 cv2.destroyAllWindows()

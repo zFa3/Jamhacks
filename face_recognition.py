@@ -129,6 +129,16 @@ class FaceRecognition:
 
             self.tilt = False
             self.tilt_hist.append(None)
+    
+    def prune_data(self, array):
+        for i, t in enumerate(array):
+            if t != None:
+                left = i; break
+        for i, _ in enumerate(array[::-1]):
+            if _ != None:
+                return array[left:len(array) - i]
+        return []
+
 
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

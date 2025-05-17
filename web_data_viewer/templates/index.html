@@ -5,6 +5,26 @@
 
 {% block content %}
 
-<h1>Welcome!</h1>
+<div class="container fw-bold mx-auto text-light text-center my-5">
+  <h1>Welcome!</h1>
+</div>
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Monthly Sales</h3>
+        <canvas id="myLineChart" height="400"></canvas>
+
+        <p id="geminiSummary" class="my-5 text-dark-center mx-auto">No Data To Show</p>
+    </div>
+</div>
+
+<a class="btn btn-primary text-light" onclick="getGraphs()">refreshGraphs</a>
+
+</div>
 
 {% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='general_script.js') }}"></script>
+{% endblock script %}
