@@ -37,6 +37,7 @@ class FaceRecognition:
         self.left_eye = []
         self.right_eye = []
 
+        self.tilt_hist = []
         self.tilt = False
 
     def calculate_distance(self: FaceRecognition, x1: int, y1: int, x2: int, y2: int) -> float:
@@ -116,6 +117,7 @@ class FaceRecognition:
                 self.right_pan.append(self.calculate_distance(right_clx, right_cly, right_lx, right_ly) - self.calculate_distance(right_crx, right_cry, right_rx, right_ry))
 
                 self.tilt = abs(left_clx - left_crx) < abs(left_cly - left_cry) * (3 ** 0.5)
+                self.tilt_hist.append(self.tilt)
 
         else:
 
@@ -125,7 +127,8 @@ class FaceRecognition:
             self.left_eye.append(None)
             self.right_eye.append(None)       
 
-            self.tilt = False     
+            self.tilt = False
+            self.tilt_hist.append(None)
 
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

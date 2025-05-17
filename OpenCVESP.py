@@ -31,6 +31,8 @@ delay_time = 5 # seconds
 time1 = None
 cnt = 0
 
+ping_api = False # TODO CHANGE
+
 # for loop
 while capture.isOpened():
 
@@ -47,7 +49,8 @@ while capture.isOpened():
         if not FaceDetected.is_face_in_frame(frame):
             cnt += 1
         cv2.imwrite("./test_images/api_frame.png", frame)
-        print(api_call.APICall.make_call("api_frame.png"))
+        if ping_api:
+            print(api_call.APICall.make_call("api_frame.png"))
         time1 = perf_counter()
     if cnt == 2:
         break
@@ -61,7 +64,7 @@ while capture.isOpened():
     if cv2.waitKey(1) == ord('q'):
         break
 
-graph(face_tracker.right_pan)
+graph(face_tracker.tilt_hist)
 
 capture.release()
 cv2.destroyAllWindows()

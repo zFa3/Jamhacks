@@ -1,3 +1,4 @@
+# https://cloud.google.com/vision?hl=en
 import requests
 import os
 import base64
