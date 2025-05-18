@@ -5,6 +5,7 @@ from face_recognition import FaceRecognition
 from time import perf_counter
 
 capture = cv2.VideoCapture(0)
+caller = api_call.APICall()
 
 delay_time = 5 # seconds
 
@@ -27,7 +28,7 @@ while capture.isOpened():
         # if not BodyDetection.is_person_in_frame(frame):
             # break
         cv2.imwrite("./test_images/api_frame.png", frame)
-        print(api_call.APICall.make_call("api_frame.png"))
+        caller.return_call("api_frame.png")
         time1 = perf_counter()
 
     # print(face_tracker.tilt)
