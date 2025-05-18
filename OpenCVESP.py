@@ -15,6 +15,9 @@ esp_port = 80           # Port must match the one in .ino code
 ping_api = False # TODO
 use_espcam = True
 
+def dangerous():
+    return face_tracker.tilt or face_tracker.rate_eye_pan(face_tracker.left_pan[-1])
+
 def send_data(message):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((esp_ip, esp_port))
@@ -50,6 +53,7 @@ api_caller = APICall()
 delay_time = 5 # seconds 
 time1 = None
 cnt = 0
+previous = 0
 
 # for loop
 while capture.isOpened():
@@ -79,9 +83,15 @@ while capture.isOpened():
         time1 = perf_counter()
     if cnt == 2:
         break
-
     
-    # send_data("ON" if face_tracker.tilt else "OFF")
+    if previous == 20:
+        send_data("ON" if dangerous() else "OFF")
+        previous = -10
+    elif previous < 0:
+        previous += 1
+    else:
+        send_data("OFF")
+        previous += dangerous()
 
     cv2.imshow('DriverAssist', final_frame)
     if cv2.waitKey(1) == ord('q'):

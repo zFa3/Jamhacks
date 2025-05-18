@@ -145,7 +145,7 @@ class FaceRecognition:
 
     def rate_eye_pan(self, pan_number):
         if pan_number:
-            return abs(pan_number) > 14
+            return abs(pan_number) > 12
         return False
     
     def rate_eye(self, eye):
