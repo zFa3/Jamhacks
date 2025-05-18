@@ -12,7 +12,7 @@ import socket
 esp_ip = "10.37.108.42"  # IP address of the ESP32
 esp_port = 80           # Port must match the one in .ino code
 
-ping_api = False # TODO
+ping_api = True # TODO
 use_espcam = True
 
 def dangerous():
@@ -84,7 +84,7 @@ while capture.isOpened():
     if cnt == 2:
         break
     
-    if previous == 20:
+    if previous == 30:
         send_data("ON" if dangerous() else "OFF")
         previous = -10
     elif previous < 0:
