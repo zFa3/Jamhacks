@@ -5,20 +5,44 @@
 
 {% block content %}
 
-<div class="container fw-bold mx-auto text-light text-center my-5">
-  <h1>Welcome!</h1>
+<div class="container mx-auto text-light text-center my-5">
+  <h1 class="display-1 fw-bold">Drive Assist</h1>
 </div>
 
 <div class="container mt-5">
-    <div class="card shadow p-4">
-        <h3 class="text-center mb-4">Monthly Sales</h3>
-        <canvas id="myLineChart" height="400"></canvas>
+    <div class="card shadow p-4 border-light border-thick">
+        <h3 class="text-center mb-4">Phone Detection</h3>
+        <canvas id="phoneCheck" height="400"></canvas>
 
-        <p id="geminiSummary" class="my-5 text-dark-center mx-auto">No Data To Show</p>
+        <h4 id="geminiSummary1" class="my-2 text-dark-center mx-5">No Data To Show</h4>
     </div>
 </div>
 
-<a class="btn btn-primary text-light" onclick="getGraphs()">refreshGraphs</a>
+<div class="container mt-5">
+    <div class="card shadow p-4 border-light border-thick">
+        <h3 class="text-center mb-4">Eyes Getting Distracted</h3>
+        <canvas id="eyePan" height="400"></canvas>
+
+        <h5 id="eyePanVariance" class="mt-5 text-dark text-left mx-5"></h5>
+        <br>
+        <h4 id="geminiSummary2" class="my-2 text-dark-center mx-5">No Data To Show</h4>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="card shadow p-4 border-light border-thick">
+        <h3 class="text-center mb-4">Abnormal Head Tilts</h3>
+        <canvas id="headTilt" height="400"></canvas>
+        
+        <h5 id="headTiltVariance" class="mt-5 text-dark text-left mx-5"></h5>
+        <br>
+        <h4 id="geminiSummary3" class="my-2 text-dark-center mx-5">No Data To Show</h4>
+    </div>
+</div>
+
+<div class="text-center">
+    <a class="btn btn-light text-dark w-40 h-20 my-5 py-3 px-3" onclick="getGraphs()"><h2>Refresh Graphs</h2></a>
+</div>
 
 </div>
 

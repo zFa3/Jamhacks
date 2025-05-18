@@ -40,6 +40,8 @@ class FaceRecognition:
         self.tilt_hist = []
         self.tilt = False
 
+        self.tilt_values = []
+
     def calculate_distance(self: FaceRecognition, x1: int, y1: int, x2: int, y2: int) -> float:
         ''' calculate euclidean distance between two points '''
         return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
@@ -118,6 +120,7 @@ class FaceRecognition:
 
                 self.tilt = abs(left_clx - left_crx) < abs(left_cly - left_cry) * (3 ** 0.5)
                 self.tilt_hist.append(self.tilt)
+                self.tilt_values.append((left_cly - left_cry) * (-1 if (left_clx - left_crx) < 0 else 1))
 
         else:
 
@@ -129,6 +132,7 @@ class FaceRecognition:
 
             self.tilt = False
             self.tilt_hist.append(None)
+            self.tilt_values.append(None)
     
     def prune_data(self, array):
         for i, t in enumerate(array):
@@ -139,6 +143,15 @@ class FaceRecognition:
                 return array[left:len(array) - i]
         return []
 
+    def rate_eye_pan(self, pan_number):
+        if pan_number:
+            return abs(pan_number) > 14
+        return False
+    
+    def rate_eye(self, eye):
+        if eye:
+            return abs(eye) < 16
+        return False
 
     def add_overlay(self: FaceRecognition, frame : cv2.Mat) -> cv2.Mat:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

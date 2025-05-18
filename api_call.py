@@ -13,6 +13,7 @@ url = f"https://vision.googleapis.com/v1/images:annotate?key={API_KEY}"
 class APICall:
     
     def __init__(self) -> None:
+        self.phone_hist = []
         self.phone_detected = 0
 
     def make_call(self, image_filename) -> None:
@@ -58,6 +59,9 @@ class APICall:
                         self.phone_detected += 1
                         break
                     # print(f"- {obj['name']} ({obj['score']:.2f})")
+
+            self.phone_hist.append(self.phone_detected)
+
         else:
             print("Error:", response.status_code, response.text)
     
