@@ -1,5 +1,10 @@
 body {
-    background-color: #54176c;
+    background-color: #2e1f35;
+    /* background-image: url("{{ url_for('static', filename='images/Background.png') }}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh; */
 }
 
 .card {
@@ -7,5 +12,6 @@ body {
 }
 
 .border-thick {
-    border-width: 10px;
+    border-width: 5px;
+    border-color: #b59cb6
 }

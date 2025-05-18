@@ -12,7 +12,7 @@ import socket
 esp_ip = "10.37.108.42"  # IP address of the ESP32
 esp_port = 80           # Port must match the one in .ino code
 
-ping_api = True # TODO
+ping_api = False # TODO
 use_espcam = True
 
 def dangerous():
